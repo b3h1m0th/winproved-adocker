@@ -1,4 +1,4 @@
-name: LiMint 0.0.11
+name: LiMint 0.0.12
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         default: '8192'
 
 jobs:
-  desktop-env:
+  desktop-LiMint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,15 +16,11 @@ jobs:
       
       - name: Download Linux Mint ISO
         run: |
-          wget -O linuxmint.iso https://mirrors.cicku.me/linuxmint/iso/stable/22.2/linuxmint-22.2-xfce-64bit.iso
-      
-      - name: Verify ISO Integrity
-        run: |
-          sha256sum linuxmint.iso
-          echo "ISO downloaded successfully"
+          wget -q -O linuxmint.iso https://mirrors.cicku.me/linuxmint/iso/stable/22.2/linuxmint-22.2-xfce-64bit.iso
       
       - name: Create Disk Image
         run: |
+          sudo apt-get update
           sudo apt-get install -y qemu-utils
           qemu-img create disk.qcow2 50G
       
