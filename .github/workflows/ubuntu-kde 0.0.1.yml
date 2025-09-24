@@ -1,19 +1,20 @@
-name: rpcs3 0.0.1
+name: webtop 0.0.3
 
 on:
   workflow_dispatch:
 
 jobs:
-  run-rpcs3:
+  run-webtop:
     runs-on: ubuntu-latest
 
     steps:
       - name: Run container
         run: |
           docker run -d \
-          --name=rpcs3 \
+          --name=webtop \
+          --cap-add=NET_ADMIN \
+          --security-opt seccomp=unconfined `#optional` \
           -e PUID=1000 \
-          -e TITLE="rpcs3" \
           -e PGID=1000 \
           -e TZ=Etc/UTC \
           -p 3000:3000 \
@@ -21,12 +22,12 @@ jobs:
           -v /config:/config \
           --shm-size="1gb" \
           --restart unless-stopped \
-          lscr.io/linuxserver/rpcs3:latest
+          lscr.io/linuxserver/webtop:ubuntu-kde
 
       - name: Show running containers
         run: docker ps
         
-      - name: Run Flared
+      - name: Run f1r3Flared
         run: |
           wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
           chmod +x cloudflared-linux-amd64
@@ -36,4 +37,3 @@ jobs:
 
       - name: Keep alive for 5 hours
         run: sleep 18000
-    
