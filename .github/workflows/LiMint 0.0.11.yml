@@ -1,4 +1,4 @@
-name: Linux Mint Desktop VM
+name: LiMint 0.0.11
 
 on:
   workflow_dispatch:
@@ -25,6 +25,7 @@ jobs:
       
       - name: Create Disk Image
         run: |
+          sudo apt-get install -y qemu-utils
           qemu-img create disk.qcow2 50G
       
       - name: Install Dependencies
