@@ -1,45 +1,38 @@
-name: tesd0 0.0.3
+name: 0.0.1
 
 on:
   workflow_dispatch:
 
 jobs:
-  run-tesd0:
+  run:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Docker Setup QEMU
-        uses: docker/setup-qemu-action@v3.6.0
-  
-      - name: Docker Setup Compose
-        uses: docker/setup-compose-action@v1.2.0
-    
       - name: Run container
         run: |
           docker run -d \
-          --name=w1n \
-          --cap-add=NET_ADMIN \
-          --security-opt seccomp=unconfined `#optional` \
-          --device=/dev/kvm \
-          --device=/dev/net/tun \
+          --name=webtop \
+          -e PUID=1000 \
+          -e PGID=1000 \
           -e TZ=Etc/UTC \
-          -e VERSION:"https://archive.org/download/tiny-11-NTDEV/tiny11%2023H2%20x64.iso" \
-          -p 8006:8006 \
-          -v /config:/storage \
+          -e CHROME_CLI=https://www.linuxserver.io/ `#optional` \
+          -p 3000:3000 \
+          -p 3001:3001 \
+          -v /config:/config \
           --shm-size="1gb" \
           --restart unless-stopped \
-          dockurr/windows      
-          
+          lscr.io/linuxserver/webtop:debian-icewm
+
       - name: Show running containers
         run: docker ps
         
-      - name: Run Fl4r3d
+      - name: Run f1r3Flared
         run: |
           wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
           chmod +x cloudflared-linux-amd64
           mv cloudflared-linux-amd64 cloudflared
           ./cloudflared --version
-          ./cloudflared tunnel --url http://localhost:8006
+          ./cloudflared tunnel --url http://localhost:3000
 
       - name: Keep alive for 5 hours
         run: sleep 18000
