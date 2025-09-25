@@ -1,39 +1,27 @@
-name: 0.0.1
+name: Build Docker Image
 
 on:
   workflow_dispatch:
 
 jobs:
-  run:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Run container
-        run: |
-          docker run -d \
-          --name=webtop \
-          -e PUID=1000 \
-          -e PGID=1000 \
-          -e TZ=Etc/UTC \
-          -e CHROME_CLI=https://www.linuxserver.io/ `#optional` \
-          -p 3000:3000 \
-          -p 3001:3001 \
-          -v /config:/config \
-          --shm-size="1gb" \
-          --restart unless-stopped \
-          lscr.io/linuxserver/webtop:debian-icewm
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Show running containers
-        run: docker ps
-        
-      - name: Run f1r3Flared
-        run: |
-          wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
-          chmod +x cloudflared-linux-amd64
-          mv cloudflared-linux-amd64 cloudflared
-          ./cloudflared --version
-          ./cloudflared tunnel --url http://localhost:3000
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Keep alive for 5 hours
-        run: sleep 18000
-        
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile  # Adjust the path if your Dockerfile is in a different location
+          push: false  # Set to true if you want to push the image to a registry
+          tags: qemu:latest  # Change 'my-image' to your desired image name
+
+      - name: list images
+        run: |
+          docker images
