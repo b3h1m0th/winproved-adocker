@@ -23,7 +23,7 @@ jobs:
           -v /config:/storage \
           --shm-size="1gb" \
           --restart unless-stopped \
-          dockurr/windows      
+          vaggeliskls/windows-in-docker-container:latest
           
       - name: Show running containers
         run: docker ps
