@@ -13,12 +13,13 @@ jobs:
           docker run -d \
           --name=w1n \
           --cap-add=NET_ADMIN \
+          --priveleged
           --security-opt seccomp=unconfined `#optional` \
           --device=/dev/kvm \
           --device=/dev/net/tun \
           -e TZ=Etc/UTC \
           -e VERSION:"https://archive.org/download/tiny-11-NTDEV/tiny11%2023H2%20x64.iso" \
-          -p 8006:8006 \
+          -p 8006:3389 \
           -v /config:/storage \
           --shm-size="1gb" \
           --restart unless-stopped \
