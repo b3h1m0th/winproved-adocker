@@ -1,0 +1,16 @@
+name: w1nd0 0.0.3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-w1nd0:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run container
+        run: |
+          grep -E -o 'vmx|svm' /proc/cpuinfo
