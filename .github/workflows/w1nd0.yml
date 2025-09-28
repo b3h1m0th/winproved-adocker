@@ -13,7 +13,7 @@ jobs:
           docker run -d \
           --name=w1n \
           --cap-add=NET_ADMIN \
-          --privileged
+          --privileged \
           --security-opt seccomp=unconfined `#optional` \
           --device=/dev/kvm \
           --device=/dev/net/tun \
